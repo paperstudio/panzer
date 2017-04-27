@@ -1,0 +1,641 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Paper Panzer</title>
+  <meta name="description" content="Paper Panzer">
+  <meta name="author" content="Paperstudio">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+  {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Open Sans";
+    font-size: 14px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  body{
+    background: #FFF;
+  }
+  h1, h1 span{
+    font-size: 36px;
+  }
+  h1,h2,h3,h4{
+    font-weight: normal;
+  }
+  #container{
+    margin: 50px auto;
+    width: 800px;
+    position: relative;
+  }
+  #stats{
+    position: relative;
+    background: #000;
+    padding: 5px;
+    border-top: 3px white solid;
+  }
+  #stats .right{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+  #stats{
+    display: none;
+  }
+  #stats p{
+    color: #999;
+    margin: 5px 10px;
+  }
+  .bar{
+    display: inline-block;
+    width: 300px;
+    height: 20px;
+    position: relative;
+    top: 5px;
+    border: 1px #666 solid;
+    background: #555;
+  }
+  .bar .fill{
+    background: rgb(0, 255, 0);
+    width: 300px;
+    height: 20px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+  }
+  #summoners{
+    background: #FFF;
+    color: #000;
+    padding: 4px;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+  #plus_one{
+    font-size: 24px;
+    color: #FFF;
+    font-weight: bold;
+    position: absolute;
+    z-index: 5;
+    left: 160px;
+    bottom: 50px;
+    display: none;
+  }
+  .screen{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(100,255,255,.8);
+    padding: 20px;
+    display: none;
+  }
+  #next_level{
+    padding-left: 150px;
+    width: 630px;
+  }
+  #next_level label{
+    display: inline-block;
+    width: 100px;
+  }
+  #next_level .value{
+    display:inline-block;
+    width: 100px;
+  }
+  #next_level p{
+    margin: 5px 0px;
+  }
+  #next_level .grade{
+    font-size: 24px;
+  }
+  #next_level .grade label{
+    position: relative;
+    font-size: 16px;
+    margin-right: 15px;
+  }
+  #next_level .grade .value{
+    background: #AAA;
+    border-radius: 40px;
+    width: 80px;
+    height: 63px;
+    padding-top: 17px;
+    font-size: 30px;
+    text-align: center;
+    display: inline-block;
+  }
+  #next_level .grade .value[data-grade=a]{
+    background: #8fff68;
+  }
+  #next_level .grade .value[data-grade=c]{
+    background: #DFF553;
+  }
+  #next_level .grade .value[data-grade=f]{
+    background: #F55353;
+  }
+  #next_level .button{
+    margin-top: 50px;
+  }
+  .button{
+    text-decoration: none;
+    display: inline-block;
+    padding: 5px 10px;
+    background: #8fff68;
+    color: #000;
+    border: 1px #53F559 solid;
+  }
+  .button.red{
+    background: #F55353;
+    border: none;
+  }
+  .screen.black{
+    top: 0px;
+    background: #eee;
+    color: #000;
+    margin-top: 0px;
+    height: 70%;
+    width: 85%;
+    padding: 100px 100px;
+  }
+  #email_input{
+    margin: 10px 0px;
+    padding: 3px;
+  }
+  #death{
+    height: 100px;
+  }
+  </style>
+  
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+	<div >
+    <div class="black screen" id="intro">
+      <h1>The Second Dimension</h1>
+      <p>Within the third dimension exists a continuum of two dimensional planes where positive and negative forces collide. Your objective is to clear as many planes possible of negative forces by travelling through interplanar portals.</p><br/>
+
+      <p>Controls: WASD, Mouse left click to fire</p><br/><br/>
+      <a href="#" id="play" class="button">Play</a>
+    </div>
+    <div class="black screen" id="email">
+      <p>Part of the hidden gameplay can only be revealed through email. If you already know the secret, please skip this.</p>
+      <input type="email" id="email_input" placeholder="Your email"/><br/><br/>
+      <a href="#" class="button">Continue</a><br/><br/>
+      <a href="#" class="button red">Skip</a>
+    </div>
+    <div class="screen" id="death">
+      <h1>EVERYBODY DIES SOMETIME</h1>
+      <a href="#" class="button">Restart Level</a>
+    </div>
+    <div class="screen" id="next_level">
+      <h1>STAGE <span id="lnum">0</span> COMPLETE</span></h1>
+      <p data-tag="kills"><label>Kills</label> <span class="value"></span><span class="stars"></span></p>
+      <p data-tag="deaths"><label>Deaths</label> <span class="value"></span><span class="stars"></span></p>
+      <p data-tag="time"><label>Time</label> <span class="value"></span><span class="stars"></span></p>
+      <p data-tag="accuracy"><label>Accuracy</label> <span class="value"></span><span class="stars"></span></p>
+      <h3 data-tag="grade" class="grade"><label>Total Grade</label><span class="value" data-grade="f">F</span></h3>
+      <p class="message"></p>
+      <a href="#" class="continue button">Continue</a>
+    </div>
+    <div id="game"></div>
+    <div id="stats">
+      <div id="plus_one">+1</div>
+      <div class="row">
+        <p>Summoners Obtained <span id="summoners"></span></p>
+      </div>
+      <div class="row">
+        <p>Health <span class="bar" id="health"><span class="fill"></span></span>&nbsp;&nbsp;Deaths <span id="deaths"></span></p>
+      </div>
+      <div class="right">
+        <p>Score <span id="score">0</span></p>
+        <p>Time <span id="time">0</span></p>
+      </div>
+    </div>
+  </div>
+  <script src="js/phaser.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/enemy.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+
+  <script>
+
+  	var game = new Phaser.Game(1200, 570, Phaser.AUTO, "game", {preload: preload, create: create, update: update, render: render});
+  	var pl = null;
+    var pl_bullets = null;
+    var e_bullets = null;
+    var e1 = null, e2 = null;
+    var diamonds = null;
+    var dMeter = 0;
+    var dNeeded = 3;
+    var dGotten = false;
+  	var cursors = null;
+    var locked = false;
+    var lockTimer = 100;
+    var endLevel = false;
+    var endLevelTimer = 0;
+    var paused = true;
+
+    var portal = null;
+    var portalOpening = null;
+    var portalOpen = null;
+    var portalAvailable = false;
+
+    var emitters = {
+      enemy1: null,
+      enemy2: null
+    }
+    var sounds = {
+      hit: null
+    };
+    var feedback = {
+      num_fired : 0,
+      num_hit : 0,
+      time: 0,
+      score: 0,
+      deaths: 0
+    }
+    var level = 1;
+
+
+
+    var mode = 2;//0 - hard, 1 - neutral, 2 - easy
+
+    
+  	function preload(){
+  		game.load.image("player", "img/player-glow.png");
+      game.load.image("bullet", "img/bullet-glow.png");
+      game.load.image("bg", "img/bg.png");
+      game.load.image("enemy1", "img/enemy.png");
+      game.load.image("enemy2", "img/enemy2.png");
+      game.load.image("enemy1_particle", "img/enemy1_particle.png");
+      game.load.image("enemy2_particle", "img/enemy2_particle.png");
+      game.load.image("portal-closed", "img/portal.png");
+      game.load.image("portal-opening", "img/opening.png");
+      game.load.image("portal-open", "img/portal-open.png");
+      game.load.image("diamond", "img/diamond.png");
+      game.load.image("e_bullet", "img/enemy_bullet.png");
+      game.load.audio("hit", "sounds/hit.ogg");
+      game.load.audio("eFire", "sounds/eFire.ogg");
+      game.load.audio("explode", "sounds/explode.ogg");
+      game.load.audio("diamond", "sounds/diamond.ogg");
+  	}
+
+  	function create(){
+      sounds.hit = game.add.audio("hit");
+      sounds.eFire = game.add.audio("eFire");
+      sounds.explode = game.add.audio("explode");
+      sounds.diamond = game.add.audio("diamond");
+      game.add.tileSprite(0,0,1200,1000,"bg");
+      game.world.setBounds(0,0,1200,1000);
+  		game.physics.startSystem(Phaser.Physics.ARCADE);
+
+      //Portal set up
+      portal = game.add.sprite(0, 0, "portal-closed");
+      
+      game.physics.enable(portal, Phaser.Physics.ARCADE);
+      portal.body.immovable = true;
+      portal.anchor.setTo(.5, .5);
+      portal.body.setSize(46, 46);
+
+      portalOpening = game.add.sprite(portal.body.x, portal.body.y, "portal-opening");
+      portalOpening.anchor.setTo(.5, .5);
+
+      portalOpen = game.add.sprite(portal.body.x, portal.body.y, "portal-open");
+      portalOpen.anchor.setTo(.5, .5);
+
+      resetPortal();
+      
+
+
+      //Player set up
+  		pl = game.add.sprite(game.width/2, game.height/2,"player");
+  		game.physics.enable(pl, Phaser.Physics.ARCADE);
+  		pl.body.collideWorldBounds = true;
+      pl.body.setSize(16, 16, 0, 0);
+      pl.anchor.set(.5);
+      pl.cameraOffset.x = 100;
+      pl.cameraOffset.y = 100;
+      pl.health = 100;
+      game.camera.follow(pl);
+
+      //Player bullets set up
+      pl_bullets = game.add.group();
+      pl_bullets.enableBody = true;
+      pl_bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+      //Enemy set up
+      e1 = game.add.group();
+      e1.enableBody = true;
+      e1.physicsBodyType = Phaser.Physics.ARCADE;
+
+      e2 = game.add.group();
+      e2.enableBody = true;
+      e2.physicsBodyType = Phaser.Physics.ARCADE;
+
+      //Enemy bullet set up
+      e_bullets = game.add.group();
+      e_bullets.enableBody = true;
+      e_bullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+      //Explosion emitter set up
+      emitters.enemy1 = game.add.emitter(0,0,100);
+      emitters.enemy1.makeParticles("enemy1_particle");
+      emitters.enemy2 = game.add.emitter(0,0,100);
+      emitters.enemy2.makeParticles("enemy2_particle");
+
+      //Diamond set up
+      diamonds = game.add.group();
+      diamonds.enableBody = true;
+      diamonds.physicsBodyType = Phaser.Physics.ARCADE;
+
+  		
+  	}
+
+
+
+  	function update(){
+      if(paused){
+        return;
+      }
+      //portalOpening.x = pl.body.x;
+      if(endLevel){
+        var finalVelocityX = (portal.body.x - pl.body.x)/10;
+        pl.body.velocity.x += finalVelocityX/10;
+        if(pl.body.velocity.x > finalVelocityX){
+          pl.body.velocity.x = finalVelocityX;
+        }
+        var finalVelocityY = (portal.body.y - pl.body.y)/10;
+        pl.body.velocity.y += finalVelocityY/10;
+        if(pl.body.velocity.y > finalVelocityY){
+          pl.body.velocity.y = finalVelocityY;
+        }
+        if(pl.scale.x > 0){
+          pl.scale.x -= .01;
+          pl.scale.y -= .01;
+        }
+        endLevelTimer += game.time.elapsed;
+        if(endLevelTimer >= 2000){
+          UI.showLevelScreen();
+          endLevel = false;
+        }
+        return;
+      }
+      if(pl.health <= 0){
+        //show explosion
+        //pause game
+        pl.kill();
+        paused = true;
+        //show death screen
+        $("#death").fadeIn();
+      }
+      var pl_angle = Math.PI + game.physics.arcade.angleToPointer(pl);
+      pl.rotation = pl_angle;
+      var s = 200;
+      var dir = 0;
+  		if(cursors.left.isDown){
+  			dir = -1;
+  		}
+  		else if(cursors.right.isDown){
+  			dir = 1;
+  		}
+      if(dir != 0){
+        pl.body.velocity.x += (dir * s) / 10;
+        if(Math.abs(pl.body.velocity.x) > s){
+          pl.body.velocity.x = dir * s;
+        }
+      }
+      else{
+        pl.body.velocity.x /= 1.1;
+      }
+
+      dir = 0;
+      if(cursors.up.isDown){
+        dir = -1;
+      }
+      else if(cursors.down.isDown){
+        dir = 1;
+      }
+      if(dir != 0){
+        pl.body.velocity.y += (dir * s) / 10;
+        if(Math.abs(pl.body.velocity.y) > s){
+          pl.body.velocity.y = dir * s;
+        }
+      }
+      else{
+        pl.body.velocity.y /= 1.1;
+      }
+
+      if(game.input.mouse.button == Phaser.Mouse.LEFT_BUTTON && !locked){
+        sounds.hit.play();
+        locked = true;
+        lockTimer = 300;
+        feedback.num_fired += 1;
+        //fire on interval
+        var b = pl_bullets.getFirstDead();
+        if(b != null){
+          b.reset(pl.body.x + pl.body.width/2, pl.body.y + pl.body.height/2);
+        }
+        else{
+          b = pl_bullets.create(pl.body.x + pl.body.width/2, pl.body.y + pl.body.height/2, "bullet");
+        }
+        var bs = 350;
+        b.body.setSize(5,5, 0,0);
+        b.anchor.setTo(.5, .5);
+        b.checkWorldBounds = true;
+        b.outOfBoundsKill = true;
+        b.rotation = pl_angle;
+        
+        b.body.velocity.x = -1 * bs * Math.cos(pl_angle);
+        b.body.velocity.y = -1 * bs * Math.sin(pl_angle);
+      }
+      else{
+        lockTimer -= game.time.elapsed;
+        if(lockTimer <= 0){
+          locked = false;
+        }
+      }
+      
+      if(portalAvailable){
+        game.physics.arcade.collide(pl, portal);
+      }
+      game.physics.arcade.overlap(e1, pl_bullets, onEnemyHit);
+      game.physics.arcade.overlap(e1, pl, onEnemyPlayerCollision);
+      game.physics.arcade.overlap(e2, pl_bullets, onEnemyHit);
+      game.physics.arcade.overlap(e2, pl, onEnemyPlayerCollision);
+      game.physics.arcade.overlap(pl, e_bullets, onBulletPlayerCollision);
+      if(portalAvailable){
+        game.physics.arcade.overlap(portal, pl_bullets, onPortalHit);
+      }
+      game.physics.arcade.overlap(diamonds, pl, onDiamondCollision);
+      enemyGen();
+      fireUpdate();//update enemy fire
+      killOutOfBoundEnemies();
+      UI.updateStats();
+      feedback.time += game.time.elapsed;
+
+  	}
+  	function render(){
+      //game.debug.body(pl);
+      //game.debug.body(e1.getFirstAlive());
+     /* e2.forEachAlive(function(e){
+        game.debug.body(e);
+      })*/
+      
+    }
+
+
+    function startLevel(n){
+      //remove all bullets
+      //remove all enemies
+
+      level = n;
+      diamonds.forEachAlive(function(d){
+        d.kill();
+      });
+      e1.forEachAlive(function(e){
+        e.kill()
+      });
+      e2.forEachAlive(function(e){
+        e.kill()
+      });
+      pl_bullets.forEachAlive(function(b){
+        b.kill();
+      });
+      e_bullets.forEachAlive(function(b){
+        b.kill();
+      });
+      dMeter = 0;
+      dNeeded = 3 + ((n-1) * 2);
+      resetPortal();
+      
+      pl.reset(game.width/2, game.height/2);
+      pl.health = 100;
+      pl.scale.setTo(1,1);
+
+      //feedback.fired = 0;
+      //feedback.num_hit = 0;
+      //feedback.time = 0;
+    }
+
+    function resetPortal(){
+      portalAvailable = false;
+      portalOpening.scale.setTo(0,0);
+      portalOpen.visible = false;
+      portal.visible = false;
+    }
+    function showPortal(x,y){
+      x = Math.floor(x / 16) * 16 + 13;
+      y = Math.floor(y / 16) * 16 + 13;
+      portal.x = x;
+      portal.y = y;
+      portal.visible = true;
+      portalOpening.x = x;
+      portalOpening.y = y;
+      portalOpen.x = portal.x;
+      portalOpen.y = portal.y;
+      portalAvailable = true;
+    }
+
+
+
+    function onPortalHit(portal, bullet){
+      bullet.kill();
+      if(portalOpening.scale.x >= 1){
+        //end level
+        portalOpen.visible = true;
+        endLevel = true;
+      }
+      else{
+        portalOpening.scale.x += .05;
+        portalOpening.scale.y += .05;
+      }
+    }
+
+    //For some unknown reason, order is flipped, perhaps because player is sprite and enemy is group??
+    function onEnemyPlayerCollision(player, enemy){
+      enemy.kill();
+      //TODO: reduce player health
+      pl.health -= 20;
+    }
+    function onBulletPlayerCollision(player, bullet){
+      bullet.kill();
+      pl.health -= 20;
+    }
+
+    function onDiamondCollision(player, diamond){
+      diamond.kill();
+      dMeter += 1; //increase portal meter
+      dGotten = true;//to show plus one
+      if(dMeter >= dNeeded){
+        //show portal
+        var xVar = 100, yVar = 100;
+        if(pl.x + 100 > game.world.width) xVar = -100;
+        if(pl.y + 100 > game.world.height) yVar = -100;
+        showPortal(pl.x + xVar, pl.y + yVar);
+      }
+      feedback.score += 1;
+      sounds.diamond.play();
+    }
+    function startTheGame(){
+      $("#stats").fadeIn();
+      $("#email").fadeOut(500, function(){
+        paused = false;
+        //gotta do this here so I don't capture keys 
+        cursors = {
+          up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+          left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+          right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+          down: game.input.keyboard.addKey(Phaser.Keyboard.S)
+        };
+      });
+    }
+    
+   window.onbeforeunload = function (e) {
+    var email = $("#email_input").val().trim();
+    if(email == ""){
+      return;
+    }
+
+    //send ajax
+      var data = {
+        email: email,
+        level: level,
+        mode: mode,
+        num_fired: feedback.num_fired,
+        num_killed: feedback.num_hit,
+        deaths: feedback.deaths,
+        record: "end"
+      };
+      $.ajax({
+        url: "record.php",
+        method: "post",
+        data: data,
+        async: false,
+        success: function(resp){
+          console.log("Complete");
+          console.log(resp);
+        }
+
+      });
+  };
+
+  var aud = new Audio();
+  aud.preload = "auto"
+  aud.src = "sounds/background.ogg";
+  aud.play();
+  </script>
+
+  
+</body>
+</html>
